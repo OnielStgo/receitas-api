@@ -36,6 +36,13 @@ function iniciarApp(){
   }
 
   function mostrarReceitas(receitas = []){
+
+    limparHTML(resultado);
+
+    const heading = document.createElement('h2');
+    heading.classList.add('text-center', 'text-black', 'my-5');
+    heading.textContent = receitas.length ? "Resultados" : "Não há resultados";
+    resultado.appendChild(heading);
         
     receitas.forEach(receita => {
       const { idMeal, strMeal, strMealThumb } = receita;
@@ -72,6 +79,12 @@ function iniciarApp(){
       
       resultado.appendChild(receitaContenedor);
     })
+  }
+
+  function limparHTML(seletor){
+    while (seletor.firstChild) {
+      seletor.removeChild(seletor.firstChild)
+    }
   }
 
 
