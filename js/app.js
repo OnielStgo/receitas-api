@@ -1,6 +1,8 @@
 function iniciarApp(){
 
   const resultado = document.querySelector('#resultado');
+  const modal = new bootstrap.Modal('#modal', {})
+
   const selectCategorias = document.querySelector('#categorias');
   selectCategorias.addEventListener('change', selecionarCategoria);
 
@@ -68,6 +70,11 @@ function iniciarApp(){
       const receitaButton = document.createElement('button');
       receitaButton.classList.add('btn', 'btn-danger', 'w-100');
       receitaButton.textContent = 'Ver receita';
+      // receitaButton.dataset.bsTarget = "#modal";
+      // receitaButton.dataset.bsToggle = "modal";
+      receitaButton.onclick = function(){
+        selecionarReceita(idMeal);
+      }
 
       receitaCardBody.appendChild(receitaHeading);
       receitaCardBody.appendChild(receitaButton);
@@ -79,6 +86,31 @@ function iniciarApp(){
       
       resultado.appendChild(receitaContenedor);
     })
+  }
+
+  function selecionarReceita(id){
+    const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+
+    fetch(url)
+      .then(resposta => resposta.json())
+      .then(resultado => mostrarReceitaModal(resultado.meals[0]))
+  }
+
+  function mostrarReceitaModal(receita) {
+    const { idMeal, strInstructions, strMeal, strMealThumb } = receita;
+    
+    const modalTitle = document.querySelector('.modal .modal-title');
+    const modalBody = document.querySelector('.modal .modal-body');
+
+    modalTitle.textContent = strMeal;
+    modalBody.innerHTML = `<img class="img-fluid" src="${strMealThumb}" alt="receita ${strMeal}" />
+      <h3 class="my-3">Instruções</h3>
+      <p>${strInstructions}</p>
+    `;
+
+
+    //mostar o modal
+    modal.show()
   }
 
   function limparHTML(seletor){
