@@ -106,8 +106,46 @@ function iniciarApp(){
     modalBody.innerHTML = `<img class="img-fluid" src="${strMealThumb}" alt="receita ${strMeal}" />
       <h3 class="my-3">Instruções</h3>
       <p>${strInstructions}</p>
+      <h3 class="my-3">Ingredientes e quantidades</h3>
     `;
 
+    //mostrar ingredientes e quantidades
+    const listGroup = document.createElement('ul');
+    listGroup.classList.add('list-group');
+
+    for (let i = 0; i < 20; i++) {
+      if (receita[`strIngredient${i}`]) {
+        const ingrediente = receita[`strIngredient${i}`];
+        const quantidade = receita[`strMeasure${i}`];
+
+        const ingredienteLi = document.createElement('li');
+        ingredienteLi.classList.add('list-group-item');
+        ingredienteLi.textContent = `${ingrediente} - ${quantidade}`;
+
+        listGroup.appendChild(ingredienteLi)
+
+      }
+    }
+    
+    modalBody.appendChild(listGroup);
+
+    //botões de Salvar no Favoritos e Cerrar
+    const modalFooter = document.querySelector('.modal-footer');
+    limparHTML(modalFooter);
+
+    const btnFavorito = document.createElement('button');
+    btnFavorito.classList.add('btn', 'btn-danger', 'col');
+    btnFavorito.textContent = "Salvar nos Favoritos";
+
+    const btnFechar = document.createElement('button');
+    btnFechar.classList.add('btn', 'btn-secondary', 'col');
+    btnFechar.textContent = "Fechar";
+    btnFechar.onclick = function () {
+      modal.hide();
+    }
+
+    modalFooter.appendChild(btnFavorito);
+    modalFooter.appendChild(btnFechar);
 
     //mostar o modal
     modal.show()
