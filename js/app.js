@@ -4,11 +4,17 @@ function iniciarApp(){
   const modal = new bootstrap.Modal('#modal', {})
 
   const selectCategorias = document.querySelector('#categorias');
-  selectCategorias.addEventListener('change', selecionarCategoria);
 
-  
+  if(selectCategorias){
+    selectCategorias.addEventListener('change', selecionarCategoria);
+    obtenerCategorias();
+  }
 
-  obtenerCategorias();
+  const favoritosDiv = document.querySelector('.favoritos');
+
+  if (favoritosDiv) {
+    obtenerFavoritos()
+  }
 
   function obtenerCategorias(){
 
@@ -57,15 +63,15 @@ function iniciarApp(){
 
       const receitaImagem = document.createElement('img');
       receitaImagem.classList.add('card-img-top');
-      receitaImagem.alt = `Imagem da receita: ${strMeal}`;
-      receitaImagem.src = strMealThumb;
+      receitaImagem.alt = `Imagem da receita: ${strMeal ?? receita.titulo}`;
+      receitaImagem.src = strMealThumb ?? receita.img;
 
       const receitaCardBody = document.createElement('div');
       receitaCardBody.classList.add('card-body');
 
       const receitaHeading = document.createElement('h3');
       receitaHeading.classList.add('card-title', 'mb-3')
-      receitaHeading.textContent = strMeal;
+      receitaHeading.textContent = strMeal ?? receita.titulo;
 
       const receitaButton = document.createElement('button');
       receitaButton.classList.add('btn', 'btn-danger', 'w-100');
@@ -73,7 +79,7 @@ function iniciarApp(){
       // receitaButton.dataset.bsTarget = "#modal";
       // receitaButton.dataset.bsToggle = "modal";
       receitaButton.onclick = function(){
-        selecionarReceita(idMeal);
+        selecionarReceita(idMeal ?? receita.id);
       }
 
       receitaCardBody.appendChild(receitaHeading);
@@ -192,6 +198,21 @@ function iniciarApp(){
     const favoritos = JSON.parse(localStorage.getItem("favoritos")) ?? [];
     const novosFavoritos = favoritos.filter(favorito => favorito.id !== id);
     localStorage.setItem("favoritos", JSON.stringify(novosFavoritos));
+  }
+
+  function obtenerFavoritos(){
+   const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? [];
+   
+   if (favoritos.length) {
+    
+    mostrarReceitas(favoritos)
+    return;
+   }
+
+   const naoHaFavoritos = document.createElement('p');
+   naoHaFavoritos.classList.add('fs-4', 'text-center', 'mt-5');
+   naoHaFavoritos.textContent = "Não existem favoritos";
+   resultado.appendChild(naoHaFavoritos);
   }
 
   function limparHTML(seletor){
